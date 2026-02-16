@@ -53,17 +53,21 @@
       body {
         margin: 0;
         color: var(--ink);
-        /* requested conic gradient; angled + anchored at 30%/30% */
-        background: conic-gradient(
-          from -50deg at 30% 30%,
-          #4facfe,
-          #00f2fe,
-          #fa709a,
-          #fee140
-        );
+        /* keep background stable between human + llm views */
+        position: relative;
+        background: none;
         font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
         line-height: 1.65;
         letter-spacing: 0.01em;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        /* requested conic gradient; angled + anchored at 30%/30% (viewport-anchored) */
+        background: conic-gradient(from -50deg at 30% 30%, #4facfe, #00f2fe, #fa709a, #fee140);
       }
 
       * {
@@ -99,11 +103,7 @@
         background: rgba(255, 255, 255, 0.98);
       }
 
-      /* LLM view layout: more whitespace */
-      body.llm-view header.hero {
-        padding: calc(var(--section-y) * 0.75) 0 calc(var(--section-y) * 0.55);
-      }
-
+      /* LLM view layout: more whitespace (without moving the H1 position) */
       body.llm-view .ai-only section {
         padding: 34px 0;
       }
