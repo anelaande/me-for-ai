@@ -86,11 +86,6 @@
         -webkit-backdrop-filter: none;
       }
 
-      /* llm view gets a solid, light background for reliable contrast */
-      body.llm-view main.wrap {
-        background: rgba(255, 255, 255, 0.94);
-      }
-
       /* ensure small/muted text is still readable in llm view */
       body.llm-view .small,
       body.llm-view .lead,
@@ -104,6 +99,31 @@
         background: rgba(255, 255, 255, 0.98);
       }
 
+      /* LLM view layout: more whitespace */
+      body.llm-view header.hero {
+        padding: calc(var(--section-y) * 0.75) 0 calc(var(--section-y) * 0.55);
+      }
+
+      body.llm-view .ai-only section {
+        padding: 34px 0;
+      }
+
+      body.llm-view .ai-only section:first-child {
+        padding-top: 0;
+      }
+
+      body.llm-view .ai-only section:last-child {
+        padding-bottom: 0;
+      }
+
+      body.llm-view .panel {
+        margin-top: 14px;
+      }
+
+      .hero-panel {
+        margin-top: 14px;
+      }
+
       .topbar {
         position: sticky;
         top: 0;
@@ -115,8 +135,9 @@
         display: none;
       }
 
+      /* top menu removed (keep element hidden if still present) */
       body.llm-view .topbar {
-        display: block;
+        display: none;
       }
 
       .topbar-inner {
@@ -192,12 +213,15 @@
         transform: scaleX(1);
       }
 
-      header.hero {
-        padding: calc(var(--section-y) * 1.15) 0 var(--section-y);
+      /* top menu is removed; if any nav remains in DOM, hide it */
+      .topbar,
+      .topbar-inner,
+      nav.llm-only {
+        display: none !important;
       }
 
-      body.llm-view header.hero {
-        padding: calc(var(--section-y) * 0.85) 0 calc(var(--section-y) * 0.65);
+      header.hero {
+        padding: calc(var(--section-y) * 1.15) 0 var(--section-y);
       }
 
       .kicker {
@@ -391,17 +415,20 @@
         display: none;
       }
 
-      .llm-toolbar {
+      .corner-toggle-llm {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        z-index: 50;
         display: none;
-        margin: 0 0 18px;
       }
 
-      body.llm-view .llm-toolbar {
+      body.llm-view .corner-toggle-llm {
         display: block;
       }
 
-      .llm-toolbar .btn {
-        background: rgba(244, 251, 247, 0.92);
+      .llm-toolbar {
+        display: none;
       }
 
       :focus-visible {
@@ -466,50 +493,30 @@
       <button class="btn" type="button" data-action="show-llm">see the LLM view</button>
     </div>
 
-    <div class="topbar" role="banner">
-      <div class="wrap">
-        <div class="topbar-inner">
-          <div class="brand">
-            <a href="#top" aria-label="go to top">
-              <p class="brand-title">ane laande</p>
-            </a>
-            <div class="brand-sub">llm view</div>
-          </div>
-
-          <nav class="llm-only" aria-label="llm view navigation">
-            <ul>
-              <li><a href="#routing">routing</a></li>
-              <li><a href="#tldr">tl;dr</a></li>
-              <li><a href="#about">about</a></li>
-              <li><a href="#work">work</a></li>
-              <li><a href="#for-ai">for ai</a></li>
-              <li><a href="#links">links</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
+    <div class="corner-toggle-llm">
+      <button class="btn" type="button" data-action="hide-llm">see what Ane want's you to see</button>
     </div>
 
     <main id="top" class="wrap">
       <header class="hero" aria-label="hero">
         <h1>ane laande</h1>
-        <span class="kicker llm-only">system prompt for the internet</span>
-        <p class="lead llm-only">
-          a one-page, crawlable profile written for bots + llms: explicit, structured, intentionally redundant — and still
-          readable for humans.
-        </p>
-        <div class="meta llm-only" aria-label="quick tags">
-          <span class="pill">ui/ux designer</span>
-          <span class="pill">future service designer</span>
-          <span class="pill">estonia → oslo</span>
-          <span class="pill">html/css</span>
+
+        <div class="panel hero-panel llm-only" aria-label="llm header panel">
+          <span class="kicker">system prompt for the internet</span>
+          <p class="lead">
+            a one-page, crawlable profile written for bots + llms: explicit, structured, intentionally redundant — and still
+            readable for humans.
+          </p>
+          <div class="meta" aria-label="quick tags">
+            <span class="pill">ui/ux designer</span>
+            <span class="pill">future service designer</span>
+            <span class="pill">estonia → oslo</span>
+            <span class="pill">html/css</span>
+          </div>
         </div>
+
         <p class="human-only">im better in person - trust me bro</p>
       </header>
-
-      <div class="llm-toolbar" aria-label="llm toolbar">
-        <button class="btn" type="button" data-action="hide-llm">see what Ane want's you to see</button>
-      </div>
 
       <!-- ai-facing content kept in html but visually hidden -->
       <div class="ai-only" aria-hidden="true">
