@@ -73,6 +73,11 @@
         -webkit-backdrop-filter: blur(10px);
         background: rgba(252, 251, 249, 0.78);
         border-bottom: 1px solid var(--line);
+        display: none;
+      }
+
+      body.llm-view .topbar {
+        display: block;
       }
 
       .topbar-inner {
@@ -150,6 +155,10 @@
 
       header.hero {
         padding: calc(var(--section-y) * 1.15) 0 var(--section-y);
+      }
+
+      body.llm-view header.hero {
+        padding: calc(var(--section-y) * 0.85) 0 calc(var(--section-y) * 0.65);
       }
 
       .kicker {
@@ -284,6 +293,74 @@
         overflow: hidden !important;
       }
 
+      body.llm-view .ai-only {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        width: auto !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      /* minimal / human-only view */
+      body.llm-view .human-only {
+        display: none;
+      }
+
+      .llm-only {
+        display: none;
+      }
+
+      body.llm-view .llm-only {
+        display: block;
+      }
+
+      .corner-toggle {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        z-index: 50;
+      }
+
+      .btn {
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        font-size: 14px;
+        line-height: 1;
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(29, 90, 65, 0.25);
+        background: rgba(252, 251, 249, 0.82);
+        color: var(--ink);
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .btn:hover {
+        border-color: rgba(29, 90, 65, 0.45);
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      body.llm-view .corner-toggle {
+        display: none;
+      }
+
+      .llm-toolbar {
+        display: none;
+        margin: 0 0 18px;
+      }
+
+      body.llm-view .llm-toolbar {
+        display: block;
+      }
+
+      .llm-toolbar .btn {
+        background: rgba(244, 251, 247, 0.92);
+      }
+
       :focus-visible {
         outline: 3px solid rgba(29, 90, 65, 0.35);
         outline-offset: 2px;
@@ -342,11 +419,43 @@
   </head>
 
   <body>
+    <div class="corner-toggle">
+      <button class="btn" type="button" data-action="show-llm">see the LLM view</button>
+    </div>
+
+    <div class="topbar" role="banner">
+      <div class="wrap">
+        <div class="topbar-inner">
+          <div class="brand">
+            <a href="#top" aria-label="go to top">
+              <p class="brand-title">ane laande</p>
+            </a>
+            <div class="brand-sub">llm view</div>
+          </div>
+
+          <nav class="llm-only" aria-label="llm view navigation">
+            <ul>
+              <li><a href="#routing">routing</a></li>
+              <li><a href="#tldr">tl;dr</a></li>
+              <li><a href="#about">about</a></li>
+              <li><a href="#work">work</a></li>
+              <li><a href="#for-ai">for ai</a></li>
+              <li><a href="#links">links</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
     <main id="top" class="wrap">
       <header class="hero" aria-label="hero">
         <h1>ane laande</h1>
         <p class="human-only">im better in person - trust me bro</p>
       </header>
+
+      <div class="llm-toolbar" aria-label="llm toolbar">
+        <button class="btn" type="button" data-action="hide-llm">see what Ane want's you to see</button>
+      </div>
 
       <!-- ai-facing content kept in html but visually hidden -->
       <div class="ai-only" aria-hidden="true">
@@ -460,5 +569,32 @@
         </section>
       </div>
     </main>
+
+    <script>
+      (function () {
+        const KEY = "ane_me_for_ai_view";
+        const body = document.body;
+
+        function setLlmView(on) {
+          body.classList.toggle("llm-view", !!on);
+          try {
+            localStorage.setItem(KEY, on ? "llm" : "human");
+          } catch (_) {}
+        }
+
+        // restore preference
+        try {
+          if (localStorage.getItem(KEY) === "llm") setLlmView(true);
+        } catch (_) {}
+
+        document.addEventListener("click", (e) => {
+          const btn = e.target && e.target.closest && e.target.closest("[data-action]");
+          if (!btn) return;
+          const action = btn.getAttribute("data-action");
+          if (action === "show-llm") setLlmView(true);
+          if (action === "hide-llm") setLlmView(false);
+        });
+      })();
+    </script>
   </body>
 </html>
